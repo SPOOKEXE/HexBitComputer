@@ -1,0 +1,91 @@
+
+[[INSTRUCTION OP-CODES]]
+(23 instructions, 5 bit header for 32 max)
+
+NO-OP
+HALT
+FLUSH
+LOAD <addr> <r-addr>
+STORE <r-addr> <addr>
+MOVEREG <r-addr> <r-addr>
+MOVEMEM <addr> <addr>
+COPYREG <r-addr> <r-addr>
+COPYMEM <addr> <addr>
+
+JMP <offset>
+JMP-IF-ZERO <offset>
+JMP-IF-NOT-ZERO <offset>
+
+ADD <r-addr> <r-addr> <r-addr>
+SUB <r-addr> <r-addr> <r-addr>
+MULT <r-addr> <r-addr> <r-addr>
+DIV <r-addr> <r-addr> <r-addr>
+MOD <r-addr> <r-addr> <r-addr> (use remainder of DIV of MOD N, IF NEGATIVE, SUBTRACT REMAINDER FROM N)
+COMPTR <r-addr> <r-addr> <r-addr> (COMPARATOR)
+XOR <r-addr> <r-addr> <r-addr>
+SHIFT-U <r-addr>
+SHIFT-D <r-addr>
+ROLL-L <r-addr>
+ROLL-R <r-addr>
+
+[[INSTRUCTION DESCRIPTIONS]]
+
+NO-OP >> No operation
+HALT >> Halt the running application
+FLUSH >> Clear all the (application) registers
+LOAD >> Load the value at the memory address to @R0
+STORE >> Store the value in @R0 to the memory address
+MOVEREG >> Move register value to another register
+MOVEMEM >> Move memory address value to another address
+COPYREG >> Copy register value to another register
+COPYMEM >> Copy memory value to another register
+
+JMP >> Jump to the given instruction (offset from LINE 0)
+JMP-IF-ZERO >> Jump to the instruction if @R0 is 0
+JMP-IF-NOT-ZERO >> Jump to the instruction if @R0 is NOT 0
+
+ADD >> Add @R0 and @R1 and output to @R2
+SUB >> Subtract @R0 and @R1 and output to @R2
+MULT >> Multiply @R0 and @R1 and output to @R2
+DIV >> Divide @R0 and @R1 and output to @R2
+MOD >> Modulus; use remainder of DIV of MOD N, IF NEGATIVE, SUBTRACT REMAINDER FROM N
+COMPTR >> COMPARATOR operation
+XOR >> Exclusive-OR operation (XOR)
+SHIFT-U >> Shift bits left (far left is LOST, 0 appended to far right)
+SHIFT-D >> Shift bits right (far right is LOST, 0 appended to left)
+ROLL-L >> Shift bits left (far left is moved to far right)
+ROLL-R >> Shift bits right (far right is moved to far left)
+
+[INSTRUCTION STRUCTURE - 32 BIT INSTRUCTION]
+
+00000;000 0000000000000000000000000
+
+5 BITS FOR INSTRUCTION
+3 BITS FOR SPECIAL ARGS
+24 BITS FOR DATA
+
+[INSTRUCTION STRUCTURE - 8HEX]
+
+8 BITS FOR INSTRUCTION & SPECIAL
+24 BITS FOR DATA
+
+[[RESERVED MEMORY - 12BIT ADDR]]
+
+000000000000 = NULL
+0000000000000 = R0
+0000000000001 = R1
+0000000000010 = R2
+0000000000011 = R3
+0000000000100 = RESERVED
+0000000000101 = RESERVED
+0000000000110 = RESERVED
+0000000000111 = RESERVED
+0000000001000 = RESERVED
+...
+0000000011111 = RESERVED
+0000000100000 = FREE (6th bit becomes 1)
+0000000100001 = FREE
+0000000100011 = FREE
+0000000100100 = FREE
+...
+1111111111111 = FREE
